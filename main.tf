@@ -1,6 +1,6 @@
 # Create queue
 resource "aws_sqs_queue" "queue" {
-  name = "notifications"
+  name = var.name
   max_message_size = var.max_message_size
   message_retention_seconds = var.message_retention_seconds
   content_based_deduplication = var.content_based_deduplication
