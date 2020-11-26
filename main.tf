@@ -29,6 +29,14 @@ resource "aws_cloudwatch_metric_alarm" "message_count_alarm" {
   dimensions = {
     QueueName = aws_sqs_queue.queue.name
   }
+  alarm_actions = [
+    aws_sns_topic.message_count_alarm.arn
+  ]
+}
+
+# Create SNS topic
+resource "aws_sns_topic" "message_count_alarm" {
+  alarm_name = "${local.name_snake}MessageCount"
 }
 
 # Create CloudWatch alarm for the age of messages in the queue
@@ -46,4 +54,12 @@ resource "aws_cloudwatch_metric_alarm" "message_age_alarm" {
   dimensions = {
     QueueName = aws_sqs_queue.queue.name
   }
+  alarm_actions = [
+    aws_sns_topic.message_age_alarm.arn
+  ]
+}
+
+# Create SNS topic
+resource "aws_sns_topic" "message_age_alarm" {
+  alarm_name = "${local.name_snake}MessageAge"
 }
