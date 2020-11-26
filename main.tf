@@ -36,7 +36,7 @@ resource "aws_cloudwatch_metric_alarm" "message_count_alarm" {
 
 # Create SNS topic
 resource "aws_sns_topic" "message_count_alarm" {
-  alarm_name = "${local.name_snake}MessageCount"
+  name = "${local.name_snake}MessageCount"
 }
 
 # Create CloudWatch alarm for the age of messages in the queue
@@ -61,5 +61,5 @@ resource "aws_cloudwatch_metric_alarm" "message_age_alarm" {
 
 # Create SNS topic
 resource "aws_sns_topic" "message_age_alarm" {
-  alarm_name = "${local.name_snake}MessageAge"
+  name = "${local.name_snake}MessageAge"
 }
