@@ -2,30 +2,6 @@ locals {
   name_snake = join("", [for element in split("-", lower(var.name)) : title(element)])
 }
 
-variable "evaluation_periods" {
-  type = number
-  description = "Number of evaluation periods required before alarming"
-  default = 5
-}
-
-variable "period" {
-  type = number
-  description = "Length of evaluatin period (seconds)"
-  default = 60
-}
-
-variable "statistic" {
-  type = string
-  description = "Evaluation statistic (e.g. Maximum, Average)"
-  default = "Average"
-}
-
-variable "threshold" {
-  type = string
-  description = "Number of visible queue messages before alarm triggers"
-  default = 5000
-}
-
 # Create queue
 resource "aws_sqs_queue" "queue" {
   name = var.name
@@ -39,16 +15,33 @@ resource "aws_sqs_queue" "queue" {
 }
 
 # Create CloudWatch alarm
-resource "aws_cloudwatch_metric_alarm" "queue_message_visible_alarm" {
-  alarm_name = "${local.name_snake}MessageVisible"
+resource "aws_cloudwatch_metric_alarm" "message_count_alarm" {
+  alarm_name = "${local.name_snake}MessageCount"
   comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods = var.evaluation_periods
   metric_name = "ApproximateNumberOfMessagesVisible"
   namespace = "AWS/SQS"
-  period = var.period
-  statistic = var.statistic
-  threshold = var.threshold
   treat_missing_data = "notBreaching"
+  evaluation_periods = var.message_count_evaluation_periods
+  period = var.message_count_period
+  statistic = var.message_count_statistic
+  threshold = var.message_count_threshold
+
+  dimensions = {
+    QueueName = aws_sqs_queue.queue.name
+  }
+}
+
+# Create CloudWatch alarm for the age of messages in the queue
+resource "aws_cloudwatch_metric_alarm" "message_age_alarm" {
+  alarm_name = "${local.name_snake}MessageAge"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  metric_name = "ApproximateAgeOfOldestMessage"
+  namespace = "AWS/SQS"
+  treat_missing_data = "notBreaching"
+  evaluation_periods = var.message_age_evaluation_periods
+  period = var.message_age_period
+  statistic = var.message_age_statistic
+  threshold = var.message_age_threshold
 
   dimensions = {
     QueueName = aws_sqs_queue.queue.name

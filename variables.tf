@@ -44,3 +44,51 @@ variable "tags" {
   type = map(string)
   default = {}
 }
+
+
+variable "message_count_evaluation_periods" {
+  type = number
+  description = "Number of evaluation periods required for visible message count alarm before alarming"
+  default = 5
+}
+
+variable "message_count_period" {
+  type = number
+  description = "Length of evaluation period for visible message count alarm (seconds)"
+  default = 60
+}
+
+variable "message_count_statistic" {
+  type = string
+  description = "Evaluation statistic for visible message count alarm (e.g. Maximum, Average)"
+  default = "Average"
+}
+
+variable "message_count_threshold" {
+  type = string
+  description = "Number of visible queue messages for visible message count alarm before alarm triggers"
+  default = 1000
+}
+variable "message_age_evaluation_periods" {
+  type = number
+  description = "Number of evaluation periods required for oldest message age alarm before alarming"
+  default = 5
+}
+
+variable "message_age_period" {
+  type = number
+  description = "Length of evaluation period for oldest message age alarm (seconds)"
+  default = 60
+}
+
+variable "message_age_statistic" {
+  type = string
+  description = "Evaluation statistic for oldest message age alarm (e.g. Maximum, Average)"
+  default = "Average"
+}
+
+variable "message_age_threshold" {
+  type = string
+  description = "Number of visible queue messages for oldest message age alarm before alarm triggers"
+  default = 300
+}
