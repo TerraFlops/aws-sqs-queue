@@ -65,7 +65,7 @@ variable "message_count_statistic" {
 }
 
 variable "message_count_threshold" {
-  type = string
+  type = number
   description = "Number of visible queue messages for visible message count alarm before alarm triggers"
   default = 1000
 }
@@ -88,7 +88,18 @@ variable "message_age_statistic" {
 }
 
 variable "message_age_threshold" {
-  type = string
+  type = number
   description = "Number of visible queue messages for oldest message age alarm before alarm triggers"
   default = 300
+}
+
+variable "opsgenie_responders" {
+  type = set(string)
+  description = "Set of Opsgenie usernames to be configure as responders"
+  default = []
+}
+
+output "opsgenie_api_key" {
+  description = "If a list of Opsgenie responders was specified, this will be the API key of the Opsgenie integration"
+  value = length(opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration.api_key : null
 }

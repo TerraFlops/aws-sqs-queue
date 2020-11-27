@@ -63,3 +63,25 @@ resource "aws_cloudwatch_metric_alarm" "message_age_alarm" {
 resource "aws_sns_topic" "message_age_alarm" {
   name = "${local.name_snake}MessageAge"
 }
+
+# Retrieve Opsgenie users
+data "opsgenie_user" "opsgenie_responders" {
+  for_each = var.opsgenie_responders
+  username = each.value
+}
+
+# Create Opsgenie API integration
+resource "opsgenie_api_integration" "opsgenie_integration" {
+  count = length(opsgenie_responders) > 0 ? 1 : 0
+  name = local.name_snake
+  type = "API"
+
+  # Attach responders to the integration
+  dynamic "responders" {
+    for_each = var.opsgenie_responders
+    content {
+      type = "user"
+      id = data.opsgenie_user.opsgenie_responders[responders.key].id
+    }
+  }
+}
