@@ -20,5 +20,5 @@ output "sns_topic_message_count_alarm" {
 
 output "opsgenie_api_key" {
   description = "If a list of Opsgenie responders was specified, this will be the API key of the Opsgenie integration"
-  value = length(var.opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration[0].api_key : null
+  value = var.opsgenie_integration_name != null && length(var.opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration[0].api_key : null
 }

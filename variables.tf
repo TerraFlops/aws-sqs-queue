@@ -93,6 +93,12 @@ variable "message_age_threshold" {
   default = 300
 }
 
+variable "opsgenie_integration_name" {
+  type = string
+  description = "Opsgenie integration name"
+  default = null
+}
+
 variable "opsgenie_responders" {
   type = set(string)
   description = "Set of Opsgenie usernames to be configure as responders"

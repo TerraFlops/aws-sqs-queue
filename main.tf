@@ -72,8 +72,8 @@ data "opsgenie_user" "opsgenie_responders" {
 
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
-  count = length(var.opsgenie_responders) > 0 ? 1 : 0
-  name = local.name_snake
+  count = var.opsgenie_integration_name != null && length(var.opsgenie_responders) > 0 ? 1 : 0
+  name = var.opsgenie_integration_name
   type = "API"
 
   # Attach responders to the integration
