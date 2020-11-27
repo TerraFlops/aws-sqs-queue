@@ -99,8 +99,14 @@ variable "opsgenie_integration_name" {
   default = null
 }
 
-variable "opsgenie_responders" {
+variable "opsgenie_responders_users" {
   type = set(string)
-  description = "Set of Opsgenie usernames to be configure as responders"
+  description = "Set of Opsgenie usernames to be added as responders"
+  default = []
+}
+
+variable "opsgenie_responders_teams" {
+  type = set(string)
+  description = "Set of Opsgenie teams to be added as responders"
   default = []
 }

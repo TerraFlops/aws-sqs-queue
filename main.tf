@@ -65,23 +65,48 @@ resource "aws_sns_topic" "message_age_alarm" {
 }
 
 # Retrieve Opsgenie users
-data "opsgenie_user" "opsgenie_responders" {
-  for_each = var.opsgenie_responders
+data "opsgenie_user" "opsgenie_responders_users" {
+  for_each = var.opsgenie_responders_users
   username = each.value
+}
+
+# Retrieve Opsgenie users
+data "opsgenie_team" "opsgenie_responders_teams" {
+  for_each = var.opsgenie_responders_teams
+  name = each.value
 }
 
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
-  count = var.opsgenie_integration_name != null && length(var.opsgenie_responders) > 0 ? 1 : 0
+  count = var.opsgenie_integration_name != null && (length(var.opsgenie_responders_users) > 0 || length(var.opsgenie_responders_teams) > 0) ? 1 : 0
   name = "${var.opsgenie_integration_name}Sqs${local.name_snake}"
   type = "API"
 
   # Attach responders to the integration
   dynamic "responders" {
-    for_each = var.opsgenie_responders
+    for_each = var.opsgenie_responders_users
     content {
       type = "user"
-      id = data.opsgenie_user.opsgenie_responders[responders.key].id
+      id = data.opsgenie_user.opsgenie_responders_users[responders.key].id
     }
+  }
+  dynamic "responders" {
+    for_each = var.opsgenie_responders_teams
+    content {
+      type = "user"
+      id = data.opsgenie_team.opsgenie_responders_teams[responders.key].id
+    }
+  }
+}
+
+resource "opsgenie_integration_action" "message_age" {
+  integration_id = opsgenie_api_integration.opsgenie_integration.id
+  create {
+    name = "Create alert when age of oldest message exceeds specified threshold"
+    tags = [
+      "SQS",
+      "ApproximateAgeOfOldestMessage"
+    ]
+    priority = "P3"
   }
 }
