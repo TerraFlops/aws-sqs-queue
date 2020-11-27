@@ -99,30 +99,20 @@ resource "opsgenie_api_integration" "opsgenie_integration" {
   }
 }
 
-resource "opsgenie_integration_action" "message_age" {
-  integration_id = opsgenie_api_integration.opsgenie_integration[0].id
-  create {
-    name = "Create alert when age of oldest message exceeds specified threshold"
-    tags = [
-      "SQS",
-      "ApproximateAgeOfOldestMessage"
-    ]
-    priority = "P3"
-  }
-}
-
 # Create subscription to OpsGenie
 resource "aws_sns_topic_subscription" "message_age_alarm" {
+  count = var.opsgenie_integration_name != null && (length(var.opsgenie_responders_users) > 0 || length(var.opsgenie_responders_teams) > 0) ? 1 : 0
   topic_arn = aws_sns_topic.message_age_alarm.arn
   protocol = "https"
-  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration.api_key}"
+  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration[count.index].api_key}"
   endpoint_auto_confirms = true
 }
 
 # Create subscription to OpsGenie
 resource "aws_sns_topic_subscription" "message_count_alarm" {
+  count = var.opsgenie_integration_name != null && (length(var.opsgenie_responders_users) > 0 || length(var.opsgenie_responders_teams) > 0) ? 1 : 0
   topic_arn = aws_sns_topic.message_count_alarm.arn
   protocol = "https"
-  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration.api_key}"
+  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration[count.index].api_key}"
   endpoint_auto_confirms = true
 }
