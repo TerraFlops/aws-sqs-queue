@@ -98,9 +98,3 @@ variable "opsgenie_responders" {
   description = "Set of Opsgenie usernames to be configure as responders"
   default = []
 }
-
-output "opsgenie_api_key" {
-  description = "If a list of Opsgenie responders was specified, this will be the API key of the Opsgenie integration"
-  type = string
-  value = length(var.opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration.api_key : null
-}
