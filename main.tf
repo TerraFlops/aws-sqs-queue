@@ -93,7 +93,7 @@ resource "opsgenie_api_integration" "opsgenie_integration" {
   dynamic "responders" {
     for_each = var.opsgenie_responders_teams
     content {
-      type = "user"
+      type = "team"
       id = data.opsgenie_team.opsgenie_responders_teams[responders.key].id
     }
   }
