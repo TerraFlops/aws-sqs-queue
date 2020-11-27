@@ -101,5 +101,6 @@ variable "opsgenie_responders" {
 
 output "opsgenie_api_key" {
   description = "If a list of Opsgenie responders was specified, this will be the API key of the Opsgenie integration"
-  value = length(opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration.api_key : null
+  type = string
+  value = length(var.opsgenie_responders) > 0 ? opsgenie_api_integration.opsgenie_integration.api_key : null
 }
