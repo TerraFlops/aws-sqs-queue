@@ -100,7 +100,7 @@ resource "opsgenie_api_integration" "opsgenie_integration" {
 }
 
 resource "opsgenie_integration_action" "message_age" {
-  integration_id = opsgenie_api_integration.opsgenie_integration.id
+  integration_id = opsgenie_api_integration.opsgenie_integration[0].id
   create {
     name = "Create alert when age of oldest message exceeds specified threshold"
     tags = [
