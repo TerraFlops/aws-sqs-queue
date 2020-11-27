@@ -19,7 +19,7 @@ terraform {
       version = "~> 2.3.0"
     }
     opsgenie = {
-      source = "hashicorp/opsgenie"
+      source = "opsgenie/opsgenie"
       version = "~> 0.5.2"
     }
     sumologic = {
@@ -30,7 +30,7 @@ terraform {
       source = "hashicorp/template"
       version = "~> 2.1.2"
     }
-    tls = {
+    tls =
       source = "hashicorp/tls"
       version = "~> 2.2.0"
     }
